@@ -34,7 +34,7 @@ public class main {
 
     public static void main(String[] args) {
 
-        if(apiKey.compareTo("") == 1){
+        if(apiKey.compareTo("") == 0){
             System.out.println("No API key detected-check README for proper usage");
             System.exit(-2);
         }
