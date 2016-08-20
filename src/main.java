@@ -33,7 +33,7 @@ public class main {
 
 
     public static void main(String[] args) {
-
+        //Check to see if the API key is present
         if(apiKey.compareTo("") == 0){
             System.out.println("No API key detected-check README for proper usage");
             System.exit(-2);
