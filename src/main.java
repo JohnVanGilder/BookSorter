@@ -14,18 +14,28 @@ import java.io.*;
 //Using GSON for JSON parsing
 import com.google.gson.*;
 
+//JavaFX GUI Toolkit imports
+
+import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.Node;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
+import javafx.geometry.Pos;
 
 
-
-
-public class main {
+public class main extends Application {
 
     //First part of the URL used for the API call to the OCLC database
 
     //Put API Key here
     private static String apiKey = "";
 
-
+    //for API call
     private static String urlStart = "http://isbndb.com/api/v2/json/" + apiKey + "/book/";
 
     private static Scanner scan = new Scanner(System.in);
@@ -35,18 +45,27 @@ public class main {
     private static Book fakebook = new Book("faketitle","0","0","0","fakeauthor");
 
 
+    //GUI Elements
+    Button loadbutton;
+    Button savebutton;
+    Button quitbutton;
+    Button printbutton;
+    TextField textfield;
+
+
 
     public static void main(String[] args) {
+        launch(args);
         //Check to see if the API key is present; if not, exit
         if(apiKey.compareTo("") == 0){
             System.out.println("No API key detected-check README for proper usage");
             System.exit(-2);
         }
 
+
+
         //Here's our program loop.
         while(true) {
-
-
 
             System.out.println("Please enter an ISBN or the title of a book.");
             String identifier = null;
@@ -83,11 +102,44 @@ public class main {
             }
 
         }
-        //System.out.println(library.get(0).getTitle());
-        //System.out.println(library.get(0).getLcc());
-        //System.out.println(library.get(0).getIsbn());
 
     }
+
+    @Override
+    public void start(Stage primaryStage) throws Exception{
+        primaryStage.setTitle("BookSort");
+
+        ArrayList<Node> nodeList = new ArrayList<Node>();
+
+        loadbutton = new Button("Load");
+        savebutton = new Button("Save");
+        quitbutton = new Button("Save and Quit");
+        printbutton = new Button("Display List");
+
+        textfield = new TextField();
+
+        StackPane layout = new StackPane();
+        layout.getChildren().add(loadbutton);
+        layout.getChildren().add(savebutton);
+        layout.getChildren().add(quitbutton);
+        //layout.getChildren().add(printbutton);
+        layout.getChildren().add(textfield);
+
+        layout.setAlignment(loadbutton, Pos.BOTTOM_LEFT);
+        layout.setAlignment(savebutton, Pos.BOTTOM_CENTER);
+        layout.setAlignment(quitbutton, Pos.BOTTOM_RIGHT);
+
+
+        Scene scene = new Scene(layout, 300, 250);
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
+
+    
+
+
+
+
     private static Book getBook(String identifier){
 
         if(identifier.compareTo("quit") == 0) {
@@ -118,8 +170,8 @@ public class main {
             System.out.println("List of Commands (case sensitive):");
             System.out.println("help: displays this list");
             System.out.println("quit: exits the program");
-            System.out.println("export: exports the list of books to CSV format (unsupported)");
-            System.out.println("import: imports the list of books from CSV format (unsupported)");
+            System.out.println("export: exports the list of books to CSV format");
+            System.out.println("import: imports the list of books from CSV format");
             System.out.println("print: prints the list of books, their ISBNs and LCCs to the console");
             System.out.println
                     ("note: if a book shares a title with one of these commands, enter it with a capital letter");
