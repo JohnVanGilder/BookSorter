@@ -16,6 +16,7 @@ import com.google.gson.*;
 
 //JavaFX GUI Toolkit imports
 
+import com.intellij.notification.impl.NotificationActionProvider;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -23,12 +24,15 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+
+
 import javafx.geometry.Pos;
 
 
-public class main extends Application {
+public class main extends Application implements EventHandler<ActionEvent>{
 
     //First part of the URL used for the API call to the OCLC database
 
@@ -50,6 +54,7 @@ public class main extends Application {
     Button savebutton;
     Button quitbutton;
     Button printbutton;
+    Label label;
     TextField textfield;
 
 
@@ -72,34 +77,9 @@ public class main extends Application {
             identifier = scan.nextLine();
 
             identifier.trim();
-            if(identifier.length() == 0){
-                System.out.println("Please try again");
-                continue;
-            }
-            //if the identifier has spaces in it (after trimming) it's a title rather than an isbn, and we need to
-            //replaces the spaces with underscores for our API call.
 
-            identifier = identifier.replaceAll(" ", "_");
 
-            try {
-                Book book = getBook(identifier);
 
-                if(book == null) {
-                    System.out.println("Please try again");
-                }else if(book.getTitle().compareToIgnoreCase("faketitle") == 0){
-                    continue;
-                }else{
-                    library.add(book);
-                    System.out.println(library.get(library.size()-1).getTitle().trim() +" by "+
-                            library.get(library.size()-1).getAuthor().trim() + " successfully added.");
-                }
-
-            }catch(Exception e){
-                if(e instanceof UnsupportedOperationException){
-                    System.out.println("This function is currently unsupported.");
-                }
-
-            }
 
         }
 
@@ -116,69 +96,84 @@ public class main extends Application {
         quitbutton = new Button("Save and Quit");
         printbutton = new Button("Display List");
 
+        label = new Label();
         textfield = new TextField();
 
+        loadbutton.setOnAction(this);
+        savebutton.setOnAction(this);
+        quitbutton.setOnAction(this);
+        printbutton.setOnAction(this);
+        textfield.setOnAction(this);
+
+
+        //Setup the layout of our GUI
         StackPane layout = new StackPane();
         layout.getChildren().add(loadbutton);
         layout.getChildren().add(savebutton);
         layout.getChildren().add(quitbutton);
         //layout.getChildren().add(printbutton);
         layout.getChildren().add(textfield);
+        layout.getChildren().add(label);
 
+        layout.setAlignment(textfield, Pos.TOP_CENTER);
         layout.setAlignment(loadbutton, Pos.BOTTOM_LEFT);
         layout.setAlignment(savebutton, Pos.BOTTOM_CENTER);
         layout.setAlignment(quitbutton, Pos.BOTTOM_RIGHT);
-
+        layout.setAlignment(label, Pos.CENTER);
 
         Scene scene = new Scene(layout, 300, 250);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
 
-    
+    @Override
+    public void handle(ActionEvent event){
+
+        if(event.getSource() == textfield){
+            Book book = getBook(textfield.getCharacters().toString());
+
+            if(book == null) {
+                System.out.println("Please try again");
+            }else{
+                library.add(book);
+                //TODO: Turn this into a label below the bar
+                label.setText(library.get(library.size()-1).getTitle().trim() +" by "+
+                        library.get(library.size()-1).getAuthor().trim() + " successfully added.");
+            }
+            textfield.setText("");
+        }else if(event.getSource() == loadbutton){
+            importList();
+        }else if(event.getSource() == savebutton){
+            exportList();
+        }else if(event.getSource() == quitbutton){
+            //TODO: Implement some kind of confirmation here
+            exportList();
+            System.exit(1);
+        }
+
+    }
+
 
 
 
 
     private static Book getBook(String identifier){
 
-        if(identifier.compareTo("quit") == 0) {
-            System.out.println("Are you sure you want to quit? y/n");
-            identifier = scan.nextLine();
-            if (identifier.compareToIgnoreCase("y") == 0) {
-                exportList();
-                System.out.println("Saved and quit");
-                System.exit(1);
-            } else {
-                return fakebook;
-            }
-        }else if(identifier.compareTo("export") == 0){
-            exportList();
-            return fakebook;
-
-        }else if(identifier.compareTo("import") == 0){
-            importList();
-            return fakebook;
-
-        }else if(identifier.compareTo("print") == 0) {
-            if(printList() == 0){
-                System.out.println("The list is empty.");
-            }
-            return fakebook;
-
-        }else if(identifier.compareTo("help") == 0){
-            System.out.println("List of Commands (case sensitive):");
-            System.out.println("help: displays this list");
-            System.out.println("quit: exits the program");
-            System.out.println("export: exports the list of books to CSV format");
-            System.out.println("import: imports the list of books from CSV format");
-            System.out.println("print: prints the list of books, their ISBNs and LCCs to the console");
-            System.out.println
-                    ("note: if a book shares a title with one of these commands, enter it with a capital letter");
-
+        //if the identifier has spaces in it (after trimming) it's probably a title rather than an isbn, and we need to
+        //replaces the spaces with underscores for our API call.
+        identifier = identifier.replaceAll(" ", "_");
+        if(identifier.length() == 0){
+            System.out.println("Please try again");
             return fakebook;
         }
 
+
+       if(identifier.compareTo("print") == 0) {
+            printList();
+
+            return fakebook;
+
+        }
 
         String urlString = urlStart + identifier;
         try {
@@ -322,9 +317,12 @@ public class main extends Application {
     }
 
     //Prints the list to the console
-    private static int printList(){
+    private static void printList(){
 
-
+        if (library.size() == 0){
+            System.out.println("Library is empty");
+            return;
+        }
         for(int i = 0; i < library.size(); i++){
             System.out.println(library.get(i).getTitle() + " , "
                     + library.get(i).getAuthor() + " , "
@@ -333,7 +331,7 @@ public class main extends Application {
                     + library.get(i).getDewey());
         }
 
-        return library.size();
+        return;
     }
 
 
