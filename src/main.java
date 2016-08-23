@@ -22,10 +22,10 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
-import javafx.scene.control.Label;
-import javafx.scene.layout.StackPane;
+import javafx.scene.control.*;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 
@@ -54,39 +54,30 @@ public class main extends Application implements EventHandler<ActionEvent>{
     Button savebutton;
     Button quitbutton;
     Button printbutton;
+    Button undobutton;
     Label label;
     TextField textfield;
 
 
 
     public static void main(String[] args) {
+
         launch(args);
-        //Check to see if the API key is present; if not, exit
-        if(apiKey.compareTo("") == 0){
-            System.out.println("No API key detected-check README for proper usage");
-            System.exit(-2);
-        }
 
 
-
-        //Here's our program loop.
-        while(true) {
-
-            System.out.println("Please enter an ISBN or the title of a book.");
-            String identifier = null;
-            identifier = scan.nextLine();
-
-            identifier.trim();
-
-
-
-
-        }
 
     }
 
     @Override
     public void start(Stage primaryStage) throws Exception{
+
+        //Check to see if the API key is present; if not, alert and exit
+        if(apiKey.compareTo("") == 0){
+            Alert apiAlert = new Alert(Alert.AlertType.ERROR, "No API Key detected; see README for proper usage");
+            apiAlert.showAndWait();
+            System.exit(-2);
+        }
+
         primaryStage.setTitle("BookSort");
 
         ArrayList<Node> nodeList = new ArrayList<Node>();
@@ -95,6 +86,7 @@ public class main extends Application implements EventHandler<ActionEvent>{
         savebutton = new Button("Save");
         quitbutton = new Button("Save and Quit");
         printbutton = new Button("Display List");
+        undobutton = new Button("Undo Last Entry");
 
         label = new Label();
         textfield = new TextField();
@@ -103,25 +95,33 @@ public class main extends Application implements EventHandler<ActionEvent>{
         savebutton.setOnAction(this);
         quitbutton.setOnAction(this);
         printbutton.setOnAction(this);
+        undobutton.setOnAction(this);
         textfield.setOnAction(this);
 
 
         //Setup the layout of our GUI
-        StackPane layout = new StackPane();
-        layout.getChildren().add(loadbutton);
-        layout.getChildren().add(savebutton);
-        layout.getChildren().add(quitbutton);
-        //layout.getChildren().add(printbutton);
-        layout.getChildren().add(textfield);
-        layout.getChildren().add(label);
+        GridPane layout = new GridPane();
+        HBox hbButtons = new HBox(3);
+        HBox hbButtons2 = new HBox();
 
-        layout.setAlignment(textfield, Pos.TOP_CENTER);
-        layout.setAlignment(loadbutton, Pos.BOTTOM_LEFT);
-        layout.setAlignment(savebutton, Pos.BOTTOM_CENTER);
-        layout.setAlignment(quitbutton, Pos.BOTTOM_RIGHT);
-        layout.setAlignment(label, Pos.CENTER);
+        label.setWrapText(true);
+        layout.setAlignment(Pos.CENTER);
 
-        Scene scene = new Scene(layout, 300, 250);
+
+        layout.setVgap(5);
+        hbButtons.getChildren().addAll(loadbutton, savebutton, printbutton, undobutton);
+        hbButtons2.getChildren().addAll(quitbutton);
+
+        layout.add(textfield, 0, 0);
+        layout.add(label, 0, 1);
+        layout.add(hbButtons, 0, 2);
+        layout.add(hbButtons2, 0, 3);
+
+        hbButtons.setAlignment(Pos.CENTER);
+        hbButtons2.setAlignment(Pos.CENTER_LEFT);
+
+        Scene scene = new Scene(layout, 400, 250);
+
         primaryStage.setScene(scene);
         primaryStage.show();
     }
@@ -136,7 +136,6 @@ public class main extends Application implements EventHandler<ActionEvent>{
                 System.out.println("Please try again");
             }else{
                 library.add(book);
-                //TODO: Turn this into a label below the bar
                 label.setText(library.get(library.size()-1).getTitle().trim() +" by "+
                         library.get(library.size()-1).getAuthor().trim() + " successfully added.");
             }
@@ -145,10 +144,20 @@ public class main extends Application implements EventHandler<ActionEvent>{
             importList();
         }else if(event.getSource() == savebutton){
             exportList();
+        }else if(event.getSource() == undobutton){
+            library.remove(library.size() - 1);
+            label.setText("Last Entry Removed");
+        }else if(event.getSource() == printbutton){
+            for(int i = 0; i < library.size(); i++){
+                System.out.println(library.get(i).getAuthor());
+            }
         }else if(event.getSource() == quitbutton){
-            //TODO: Implement some kind of confirmation here
-            exportList();
-            System.exit(1);
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you'd like to save and quit?");
+            Optional<ButtonType> response = alert.showAndWait();
+            if(response.isPresent() && response.get() == ButtonType.OK) {
+                exportList();
+                System.exit(1);
+            }
         }
 
     }
