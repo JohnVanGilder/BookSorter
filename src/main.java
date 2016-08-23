@@ -126,8 +126,8 @@ public class main extends Application implements EventHandler<ActionEvent>{
 
         hbButtons2.setAlignment(Pos.CENTER);
 
-        Scene scene = new Scene(layout, 400, 250);
-
+        Scene scene = new Scene(layout, 300, 250);
+        primaryStage.setMaximized(true);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
@@ -154,6 +154,7 @@ public class main extends Application implements EventHandler<ActionEvent>{
             library.remove(library.size() - 1);
             label.setText("Last Entry Removed");
         }else if(event.getSource() == printbutton){
+            //TODO: Look at JavaFX tables, implement this here
             for(int i = 0; i < library.size(); i++){
                 System.out.println(library.get(i).getAuthor());
             }
