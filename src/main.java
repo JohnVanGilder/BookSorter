@@ -37,7 +37,7 @@ public class main extends Application implements EventHandler<ActionEvent>{
     //First part of the URL used for the API call to the OCLC database
 
     //Put API Key here
-    private static String apiKey = "";
+    private static String apiKey = "90U6WUGD";
 
     //for API call
     private static String urlStart = "http://isbndb.com/api/v2/json/" + apiKey + "/book/";
@@ -55,6 +55,7 @@ public class main extends Application implements EventHandler<ActionEvent>{
     Button quitbutton;
     Button printbutton;
     Button undobutton;
+    Button helpbutton;
     Label label;
     TextField textfield;
 
@@ -74,6 +75,7 @@ public class main extends Application implements EventHandler<ActionEvent>{
         //Check to see if the API key is present; if not, alert and exit
         if(apiKey.compareTo("") == 0){
             Alert apiAlert = new Alert(Alert.AlertType.ERROR, "No API Key detected; see README for proper usage");
+            apiAlert.setHeaderText("No API Key");
             apiAlert.showAndWait();
             System.exit(-2);
         }
@@ -87,6 +89,7 @@ public class main extends Application implements EventHandler<ActionEvent>{
         quitbutton = new Button("Save and Quit");
         printbutton = new Button("Display List");
         undobutton = new Button("Undo Last Entry");
+        helpbutton = new Button("Help");
 
         label = new Label();
         textfield = new TextField();
@@ -96,21 +99,23 @@ public class main extends Application implements EventHandler<ActionEvent>{
         quitbutton.setOnAction(this);
         printbutton.setOnAction(this);
         undobutton.setOnAction(this);
+        helpbutton.setOnAction(this);
         textfield.setOnAction(this);
 
 
         //Setup the layout of our GUI
         GridPane layout = new GridPane();
         HBox hbButtons = new HBox(3);
-        HBox hbButtons2 = new HBox();
+        HBox hbButtons2 = new HBox(3);
 
         label.setWrapText(true);
+
         layout.setAlignment(Pos.CENTER);
 
 
         layout.setVgap(5);
         hbButtons.getChildren().addAll(loadbutton, savebutton, printbutton, undobutton);
-        hbButtons2.getChildren().addAll(quitbutton);
+        hbButtons2.getChildren().addAll(helpbutton, quitbutton);
 
         layout.add(textfield, 0, 0);
         layout.add(label, 0, 1);
@@ -118,7 +123,8 @@ public class main extends Application implements EventHandler<ActionEvent>{
         layout.add(hbButtons2, 0, 3);
 
         hbButtons.setAlignment(Pos.CENTER);
-        hbButtons2.setAlignment(Pos.CENTER_LEFT);
+
+        hbButtons2.setAlignment(Pos.CENTER);
 
         Scene scene = new Scene(layout, 400, 250);
 
@@ -151,7 +157,20 @@ public class main extends Application implements EventHandler<ActionEvent>{
             for(int i = 0; i < library.size(); i++){
                 System.out.println(library.get(i).getAuthor());
             }
-        }else if(event.getSource() == quitbutton){
+        }else if(event.getSource() == helpbutton){
+            String helpDialogue;
+            helpDialogue = "Enter a book title or ISBN into the search bar and it is " +
+                    "added to your book list.\n\nLoad imports a library, and Save exports it as a CSV.\n\nUndo deletes " +
+                    "the last book entered, Save and Quit exports the file and quits the program.\n\nHelp displays this dialogue.";
+
+            Alert help = new Alert(Alert.AlertType.INFORMATION);
+            help.setTitle("BookSorter Help");
+            help.setHeaderText("BookSorter v 2.0 \nJohn Van Gilder");
+            help.setContentText(helpDialogue);
+
+            help.showAndWait();
+
+        } else if(event.getSource() == quitbutton){
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you'd like to save and quit?");
             Optional<ButtonType> response = alert.showAndWait();
             if(response.isPresent() && response.get() == ButtonType.OK) {
