@@ -18,6 +18,7 @@ import com.google.gson.*;
 
 import com.intellij.notification.impl.NotificationActionProvider;
 import javafx.application.Application;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
@@ -25,9 +26,10 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
-
+import javafx.scene.control.cell.PropertyValueFactory;
 
 import javafx.geometry.Pos;
 
@@ -56,6 +58,7 @@ public class main extends Application implements EventHandler<ActionEvent>{
     Button printbutton;
     Button undobutton;
     Button helpbutton;
+
     Label label;
     TextField textfield;
 
@@ -155,9 +158,37 @@ public class main extends Application implements EventHandler<ActionEvent>{
             label.setText("Last Entry Removed");
         }else if(event.getSource() == printbutton){
             //TODO: Look at JavaFX tables, implement this here
-            for(int i = 0; i < library.size(); i++){
-                System.out.println(library.get(i).getAuthor());
-            }
+
+            Stage tableStage = new Stage();
+            tableStage.setTitle("Book List");
+            TableColumn titleColumn = new TableColumn("Title");
+            TableColumn authorColumn = new TableColumn("Author");
+            TableColumn isbnColumn = new TableColumn("ISBN");
+            TableColumn lccColumn = new TableColumn("LCC");
+            TableColumn deweyColumn = new TableColumn("Dewey");
+            TableView table = new TableView();
+            table.getColumns().addAll(titleColumn, authorColumn, isbnColumn, lccColumn, deweyColumn);
+
+            table.setEditable(true);
+
+            titleColumn.setCellValueFactory(new PropertyValueFactory<Book, String>("title"));
+            authorColumn.setCellValueFactory(new PropertyValueFactory<Book, String>("author"));
+            isbnColumn.setCellValueFactory(new PropertyValueFactory<Book, String>("isbn"));
+            lccColumn.setCellValueFactory(new PropertyValueFactory<Book, String>("lcc"));
+            deweyColumn.setCellValueFactory(new PropertyValueFactory<Book, String>("dewey"));
+
+            table.setItems(FXCollections.observableList(library));
+            Scene scene = new Scene(table);
+
+            tableStage.setScene(scene);
+            tableStage.show();
+
+
+
+            //console printing, for now
+            //for(int i = 0; i < library.size(); i++){
+             //   System.out.println(library.get(i).getAuthor());
+            //}
         }else if(event.getSource() == helpbutton){
             String helpDialogue;
             helpDialogue = "Enter a book title or ISBN into the search bar and it is " +
