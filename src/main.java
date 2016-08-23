@@ -48,7 +48,7 @@ public class main extends Application implements EventHandler<ActionEvent>{
 
     private static ArrayList<Book> library = new ArrayList<>();
 
-    private static Book fakebook = new Book("faketitle","0","0","0","fakeauthor");
+    private static Book fakebook = new Book("faketitle","fakeauthor","0","0","0");
 
 
     //GUI Elements
@@ -269,6 +269,16 @@ public class main extends Application implements EventHandler<ActionEvent>{
                 author = " " + scan.nextLine() + " ";
             }
 
+            String[] temp = new String[99];
+            if(title.contains(",")){
+                temp = title.split(",");
+                title = "";
+                for(int i = 0; i < temp.length; i++){
+                    title += temp[i];
+                }
+            }
+
+
             //Trim the beginning and ending quotes off the Json data we just got
             title = title.substring(1,title.length()-1);
             lcc = lcc.substring(1,lcc.length()-1);
@@ -276,7 +286,7 @@ public class main extends Application implements EventHandler<ActionEvent>{
             dewey = dewey.substring(1,dewey.length()-1);
             author = author.substring(1, author.length()-1);
 
-            String[] temp = new String[2];
+
 
             if(title.length() == 0)
                 title = " ";
@@ -298,7 +308,7 @@ public class main extends Application implements EventHandler<ActionEvent>{
             }
 
             in.close();
-            Book book = new Book(title, isbn, lcc, dewey, author);
+            Book book = new Book(title, author, isbn, lcc, dewey);
             return book;
 
 

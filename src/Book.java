@@ -15,7 +15,7 @@ public class Book {
     private SimpleStringProperty author;
 
     //Constructor
-    public Book(String title, String isbn, String lcc, String dewey, String author) {
+    public Book(String title, String author, String isbn, String lcc, String dewey) {
         this.title = new SimpleStringProperty(title);
         this.isbn = new SimpleStringProperty(isbn);
         this.lcc = new SimpleStringProperty(lcc);
