@@ -61,8 +61,10 @@ public class main extends Application implements EventHandler<ActionEvent>{
     Button removebutton;
 
     Label label;
-    TextField textfield;
+    Label removelabel;
 
+    TextField textfield;
+    TextField removefield;
 
 
     public static void main(String[] args) {
@@ -86,18 +88,18 @@ public class main extends Application implements EventHandler<ActionEvent>{
 
         primaryStage.setTitle("BookSort");
 
-        ArrayList<Node> nodeList = new ArrayList<Node>();
 
         loadbutton = new Button("Load");
         savebutton = new Button("Save");
         quitbutton = new Button("Save and Quit");
         printbutton = new Button("Display List");
-        undobutton = new Button("Undo Last Entry");
+        undobutton = new Button("Delete Last Entry");
         helpbutton = new Button("Help");
         removebutton = new Button("Delete A Book");
 
         label = new Label();
         textfield = new TextField();
+
 
         loadbutton.setOnAction(this);
         savebutton.setOnAction(this);
@@ -133,7 +135,7 @@ public class main extends Application implements EventHandler<ActionEvent>{
         hbButtons2.setAlignment(Pos.CENTER);
 
         Scene scene = new Scene(layout, 300, 250);
-        primaryStage.setMaximized(true);
+      //  primaryStage.setMaximized(true);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
@@ -143,7 +145,6 @@ public class main extends Application implements EventHandler<ActionEvent>{
 
         if(event.getSource() == textfield){
             Book book = getBook(textfield.getCharacters().toString());
-
             if(book == null) {
                 System.out.println("Please try again");
             }else{
@@ -172,9 +173,13 @@ public class main extends Application implements EventHandler<ActionEvent>{
 
         }else if(event.getSource() == helpbutton){
             String helpDialogue;
-            helpDialogue = "Enter a book title or ISBN into the search bar and it is " +
-                    "added to your book list.\n\nLoad imports a library, and Save exports it as a CSV.\n\nUndo deletes " +
-                    "the last book entered, Save and Quit exports the file and quits the program.\n\nHelp displays this dialogue.";
+            helpDialogue = "Enter a book title or ISBN into the search bar and it is added to your book list.\n\n" +
+                    "Load imports a library, and Save exports it as a CSV.\n\n" +
+                    "Delete Last Entry deletes the last book entered.\n\n" +
+                    "Display List brings up a table of all books currently in the library.\n\n" +
+                    "Save and Quit exports the file and quits the program.\n\n" +
+                    "Delete a Book brings up the Delete window. \n\n" +
+                    "Help displays this dialogue.";
 
             Alert help = new Alert(Alert.AlertType.INFORMATION);
             help.setTitle("BookSorter Help");
@@ -192,16 +197,53 @@ public class main extends Application implements EventHandler<ActionEvent>{
             }
         }else if(event.getSource() == removebutton){
 
-
-
            removeBook();
+        }else if(event.getSource() == removefield){
+            //Gets the book, so it can be compared against the database
+            Book book = getBook(removefield.getCharacters().toString());
+
+            for(int i = 0; i < library.size(); i++){
+                if(library.get(i).getIsbn().compareTo(book.getIsbn()) == 0){
+                    removelabel.setText(library.get(i).getTitle() + " by " +
+                            library.get(i).getAuthor() + " successfully removed.");
+                    library.remove(i);
+                    return;
+                }
+            }
+            removelabel.setText("Book not found in library");
         }
 
     }
 
-
+    //This method removes a book from the list, given the ISBN or title.
     private void removeBook(){
 
+
+
+        Stage removeStage = new Stage();
+        removeStage.setTitle("Remove a Book");
+
+        removefield = new TextField();
+        removelabel = new Label();
+
+        removefield.setOnAction(this);
+
+        GridPane layout = new GridPane();
+
+
+        removelabel.setWrapText(true);
+
+        layout.setAlignment(Pos.CENTER);
+
+
+        layout.add(removefield, 0, 0);
+        layout.add(removelabel, 0, 1);
+
+        removelabel.setText("Remove a Book");
+        Scene scene = new Scene(layout, 300, 250);
+
+        removeStage.setScene(scene);
+        removeStage.show();
 
 
     }
