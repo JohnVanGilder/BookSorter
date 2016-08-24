@@ -58,6 +58,7 @@ public class main extends Application implements EventHandler<ActionEvent>{
     Button printbutton;
     Button undobutton;
     Button helpbutton;
+    Button removebutton;
 
     Label label;
     TextField textfield;
@@ -93,6 +94,7 @@ public class main extends Application implements EventHandler<ActionEvent>{
         printbutton = new Button("Display List");
         undobutton = new Button("Undo Last Entry");
         helpbutton = new Button("Help");
+        removebutton = new Button("Delete A Book");
 
         label = new Label();
         textfield = new TextField();
@@ -104,6 +106,7 @@ public class main extends Application implements EventHandler<ActionEvent>{
         undobutton.setOnAction(this);
         helpbutton.setOnAction(this);
         textfield.setOnAction(this);
+        removebutton.setOnAction(this);
 
 
         //Setup the layout of our GUI
@@ -118,7 +121,7 @@ public class main extends Application implements EventHandler<ActionEvent>{
 
         layout.setVgap(5);
         hbButtons.getChildren().addAll(loadbutton, savebutton, printbutton, undobutton);
-        hbButtons2.getChildren().addAll(helpbutton, quitbutton);
+        hbButtons2.getChildren().addAll(helpbutton, quitbutton, removebutton);
 
         layout.add(textfield, 0, 0);
         layout.add(label, 0, 1);
@@ -157,38 +160,16 @@ public class main extends Application implements EventHandler<ActionEvent>{
             library.remove(library.size() - 1);
             label.setText("Last Entry Removed");
         }else if(event.getSource() == printbutton){
-            //TODO: Look at JavaFX tables, implement this here
 
-            Stage tableStage = new Stage();
-            tableStage.setTitle("Book List");
-            TableColumn titleColumn = new TableColumn("Title");
-            TableColumn authorColumn = new TableColumn("Author");
-            TableColumn isbnColumn = new TableColumn("ISBN");
-            TableColumn lccColumn = new TableColumn("LCC");
-            TableColumn deweyColumn = new TableColumn("Dewey");
-            TableView table = new TableView();
-            table.getColumns().addAll(titleColumn, authorColumn, isbnColumn, lccColumn, deweyColumn);
+            displayTable();
 
-            table.setEditable(true);
+            //Uncomment to re-enable printing to the console for debugging
+            /*
+            for(int i = 0; i < library.size(); i++){
+                System.out.println(library.get(i).getAuthor());
+            }
+            */
 
-            titleColumn.setCellValueFactory(new PropertyValueFactory<Book, String>("title"));
-            authorColumn.setCellValueFactory(new PropertyValueFactory<Book, String>("author"));
-            isbnColumn.setCellValueFactory(new PropertyValueFactory<Book, String>("isbn"));
-            lccColumn.setCellValueFactory(new PropertyValueFactory<Book, String>("lcc"));
-            deweyColumn.setCellValueFactory(new PropertyValueFactory<Book, String>("dewey"));
-
-            table.setItems(FXCollections.observableList(library));
-            Scene scene = new Scene(table);
-
-            tableStage.setScene(scene);
-            tableStage.show();
-
-
-
-            //console printing, for now
-            //for(int i = 0; i < library.size(); i++){
-             //   System.out.println(library.get(i).getAuthor());
-            //}
         }else if(event.getSource() == helpbutton){
             String helpDialogue;
             helpDialogue = "Enter a book title or ISBN into the search bar and it is " +
@@ -209,13 +190,50 @@ public class main extends Application implements EventHandler<ActionEvent>{
                 exportList();
                 System.exit(1);
             }
+        }else if(event.getSource() == removebutton){
+
+
+
+           removeBook();
         }
 
     }
 
 
+    private void removeBook(){
 
 
+
+    }
+
+
+
+    private static void displayTable(){
+        Stage tableStage = new Stage();
+        tableStage.setTitle("Book List");
+        TableColumn titleColumn = new TableColumn("Title");
+        TableColumn authorColumn = new TableColumn("Author");
+        TableColumn isbnColumn = new TableColumn("ISBN");
+        TableColumn lccColumn = new TableColumn("LCC");
+        TableColumn deweyColumn = new TableColumn("Dewey");
+        TableView table = new TableView();
+        table.getColumns().addAll(titleColumn, authorColumn, isbnColumn, lccColumn, deweyColumn);
+
+        table.setEditable(true);
+
+        titleColumn.setCellValueFactory(new PropertyValueFactory<Book, String>("title"));
+        authorColumn.setCellValueFactory(new PropertyValueFactory<Book, String>("author"));
+        isbnColumn.setCellValueFactory(new PropertyValueFactory<Book, String>("isbn"));
+        lccColumn.setCellValueFactory(new PropertyValueFactory<Book, String>("lcc"));
+        deweyColumn.setCellValueFactory(new PropertyValueFactory<Book, String>("dewey"));
+
+        table.setItems(FXCollections.observableList(library));
+        Scene scene = new Scene(table);
+
+        tableStage.setScene(scene);
+        tableStage.show();
+        return;
+    }
 
     private static Book getBook(String identifier){
 
