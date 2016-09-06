@@ -67,7 +67,7 @@ public class main extends Application implements EventHandler<ActionEvent>{
 
 
     public static void main(String[] args) {
-        System.out.println("b".compareTo("a"));
+
         launch(args);
 
 
@@ -491,7 +491,6 @@ public class main extends Application implements EventHandler<ActionEvent>{
         if (result.isPresent()){
             Book.valueToCompare = result.get();
             fakebook.setValueToCompare(result.get());
-            System.out.println(Book.valueToCompare);
         }
 
         Collections.sort(library);
