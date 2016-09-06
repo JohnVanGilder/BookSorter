@@ -1,7 +1,7 @@
 # BookSorter
 This is a Java application to sort books by Library of Congress Classifier, Dewey Decimal System, or other methods of classification.
 
-Currently it runs from the command line, but future plans include a GUI.
+This version includes a GUI, but is still under development.
 
 Currently it exports all book data to a CSV, but future plans include a database.
 
