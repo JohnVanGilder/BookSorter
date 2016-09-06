@@ -37,7 +37,7 @@ public class main extends Application implements EventHandler<ActionEvent>{
     //First part of the URL used for the API call to the OCLC database
 
     //Put API Key here
-    private static String apiKey = "90U6WUGD";
+    private static String apiKey = "";
 
     //for API call
     private static String urlStart = "http://isbndb.com/api/v2/json/" + apiKey + "/book/";
@@ -89,7 +89,7 @@ public class main extends Application implements EventHandler<ActionEvent>{
 
 
         loadbutton = new Button("Load");
-        savebutton = new Button("Save");
+        savebutton = new Button("Save List");
         quitbutton = new Button("Save and Quit");
         printbutton = new Button("Display List");
         undobutton = new Button("Delete Last Entry");
