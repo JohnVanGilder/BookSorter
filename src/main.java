@@ -10,6 +10,7 @@ import java.util.*;
 
 import java.net.*;
 import java.io.*;
+import java.util.*;
 
 //Using GSON for JSON parsing
 import com.google.gson.*;
@@ -28,7 +29,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import javafx.scene.control.cell.PropertyValueFactory;
-
 import javafx.geometry.Pos;
 
 
@@ -57,6 +57,7 @@ public class main extends Application implements EventHandler<ActionEvent>{
     Button undobutton;
     Button helpbutton;
     Button removebutton;
+    Button sortbutton;
 
     Label label;
     Label removelabel;
@@ -66,7 +67,7 @@ public class main extends Application implements EventHandler<ActionEvent>{
 
 
     public static void main(String[] args) {
-
+        System.out.println("b".compareTo("a"));
         launch(args);
 
 
@@ -94,6 +95,7 @@ public class main extends Application implements EventHandler<ActionEvent>{
         undobutton = new Button("Delete Last Entry");
         helpbutton = new Button("Help");
         removebutton = new Button("Delete A Book");
+        sortbutton = new Button("Sort List");
 
         label = new Label();
         textfield = new TextField();
@@ -107,6 +109,7 @@ public class main extends Application implements EventHandler<ActionEvent>{
         helpbutton.setOnAction(this);
         textfield.setOnAction(this);
         removebutton.setOnAction(this);
+        sortbutton.setOnAction(this);
 
 
         //Setup the layout of our GUI
@@ -121,7 +124,7 @@ public class main extends Application implements EventHandler<ActionEvent>{
 
         layout.setVgap(5);
         hbButtons.getChildren().addAll(loadbutton, savebutton, printbutton, undobutton);
-        hbButtons2.getChildren().addAll(helpbutton, quitbutton, removebutton);
+        hbButtons2.getChildren().addAll(sortbutton, helpbutton, quitbutton, removebutton);
 
         layout.add(textfield, 0, 0);
         layout.add(label, 0, 1);
@@ -209,6 +212,11 @@ public class main extends Application implements EventHandler<ActionEvent>{
                 }
             }
             removelabel.setText("Book not found in library");
+        }else if(event.getSource() == sortbutton){
+           // Alert alert = new Alert(Alert.AlertType.)
+            //sortList();
+
+
         }
 
     }
@@ -462,5 +470,11 @@ public class main extends Application implements EventHandler<ActionEvent>{
         return;
     }
     //TODO: Implement sorting
+
+    private static void sortList(String valueToCompare){
+        Book.valueToCompare = valueToCompare;
+
+        Collections.sort(library);
+    }
 
 }

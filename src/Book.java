@@ -6,7 +6,10 @@
 //Books have a name, an isbn, and a library of congress classification code.
 import javafx.beans.property.SimpleStringProperty;
 
-public class Book {
+
+public class Book implements Comparable{
+
+    public static String valueToCompare;
 
     private SimpleStringProperty title;
     private SimpleStringProperty isbn;
@@ -23,6 +26,20 @@ public class Book {
         this.author = new SimpleStringProperty(author);
     }
 
+    public boolean setValueToCompare(String comparer){
+        if(comparer.compareTo("title") == 0 ||
+                comparer.compareTo("isbn") == 0 ||
+                comparer.compareTo("lcc") == 0 ||
+                comparer.compareTo("dewey") == 0||
+                comparer.compareTo("author") == 0) {
+            valueToCompare = comparer;
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+
     //Get methods for the Book class
     public String getTitle(){return title.get();}
     public String getIsbn(){return isbn.get();}
@@ -32,4 +49,23 @@ public class Book {
     public String getDewey(){return dewey.get();}
     public String getAuthor(){return author.get();}
 
+    @Override
+    public int compareTo(Object o1){
+
+        Book compBook = (Book) o1;
+
+        if(valueToCompare.compareTo("title") == 0){
+            return compBook.getAuthor().compareTo(this.getAuthor());
+        }else if(valueToCompare.compareTo("isbn") == 0){
+            return compBook.getIsbn().compareTo(this.getIsbn());
+        }else if(valueToCompare.compareTo("lcc") == 0){
+            return compBook.getLcc().compareTo(this.getLcc());
+        }else if(valueToCompare.compareTo("dewey") == 0){
+            return compBook.getDewey().compareTo(this.getDewey());
+        }else if(valueToCompare.compareTo("author") == 0){
+            return compBook.getAuthor().compareTo(this.getAuthor());
+        }
+
+        return 0;
+    }
 }
