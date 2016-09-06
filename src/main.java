@@ -213,8 +213,7 @@ public class main extends Application implements EventHandler<ActionEvent>{
             }
             removelabel.setText("Book not found in library");
         }else if(event.getSource() == sortbutton){
-           // Alert alert = new Alert(Alert.AlertType.)
-            //sortList();
+            sortList();
 
 
         }
@@ -471,8 +470,29 @@ public class main extends Application implements EventHandler<ActionEvent>{
     }
     //TODO: Implement sorting
 
-    private static void sortList(String valueToCompare){
-        Book.valueToCompare = valueToCompare;
+    private static void sortList(){
+
+        //Dialogue format based on http://code.makery.ch/blog/javafx-dialogs-official/
+
+        List<String> choices = new ArrayList<>();
+        choices.add("Title");
+        choices.add("ISBN");
+        choices.add("Library of Congress Classifier");
+        choices.add("Dewey Decimal Number");
+        choices.add("Author");
+
+        ChoiceDialog<String> dialog = new ChoiceDialog<>("Title", choices);
+        dialog.setTitle("Sorting");
+        dialog.setHeaderText("Sorting Library");
+        dialog.setContentText("Choose a Sort Parameter:");
+
+
+        Optional<String> result = dialog.showAndWait();
+        if (result.isPresent()){
+            Book.valueToCompare = result.get();
+            fakebook.setValueToCompare(result.get());
+            System.out.println(Book.valueToCompare);
+        }
 
         Collections.sort(library);
     }

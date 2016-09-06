@@ -52,18 +52,19 @@ public class Book implements Comparable{
     @Override
     public int compareTo(Object o1){
 
+
         Book compBook = (Book) o1;
 
-        if(valueToCompare.compareTo("title") == 0){
-            return compBook.getAuthor().compareTo(this.getAuthor());
-        }else if(valueToCompare.compareTo("isbn") == 0){
-            return compBook.getIsbn().compareTo(this.getIsbn());
-        }else if(valueToCompare.compareTo("lcc") == 0){
-            return compBook.getLcc().compareTo(this.getLcc());
-        }else if(valueToCompare.compareTo("dewey") == 0){
-            return compBook.getDewey().compareTo(this.getDewey());
-        }else if(valueToCompare.compareTo("author") == 0){
-            return compBook.getAuthor().compareTo(this.getAuthor());
+        if(valueToCompare.compareToIgnoreCase("title") == 0){
+            return compBook.getTitle().compareToIgnoreCase(this.getTitle());
+        }else if(valueToCompare.compareToIgnoreCase("isbn") == 0){
+            return compBook.getIsbn().compareToIgnoreCase(this.getIsbn());
+        }else if(valueToCompare.compareToIgnoreCase("Library of Congress Classifier") == 0){
+            return compBook.getLcc().compareToIgnoreCase(this.getLcc());
+        }else if(valueToCompare.compareToIgnoreCase("dewey") == 0){
+            return compBook.getDewey().compareToIgnoreCase(this.getDewey());
+        }else if(valueToCompare.compareToIgnoreCase("author") == 0){
+            return compBook.getAuthor().compareToIgnoreCase(this.getAuthor());
         }
 
         return 0;
