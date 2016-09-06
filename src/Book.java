@@ -56,15 +56,15 @@ public class Book implements Comparable{
         Book compBook = (Book) o1;
 
         if(valueToCompare.compareToIgnoreCase("title") == 0){
-            return compBook.getTitle().compareToIgnoreCase(this.getTitle());
+            return this.getTitle().compareToIgnoreCase(compBook.getTitle());
         }else if(valueToCompare.compareToIgnoreCase("isbn") == 0){
-            return compBook.getIsbn().compareToIgnoreCase(this.getIsbn());
+            return this.getIsbn().compareToIgnoreCase(compBook.getIsbn());
         }else if(valueToCompare.compareToIgnoreCase("Library of Congress Classifier") == 0){
-            return compBook.getLcc().compareToIgnoreCase(this.getLcc());
+            return this.getLcc().compareToIgnoreCase(compBook.getLcc());
         }else if(valueToCompare.compareToIgnoreCase("dewey") == 0){
-            return compBook.getDewey().compareToIgnoreCase(this.getDewey());
+            return this.getDewey().compareToIgnoreCase(compBook.getDewey());
         }else if(valueToCompare.compareToIgnoreCase("author") == 0){
-            return compBook.getAuthor().compareToIgnoreCase(this.getAuthor());
+            return this.getAuthor().compareToIgnoreCase(compBook.getAuthor());
         }
 
         return 0;
