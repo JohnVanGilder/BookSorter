@@ -2,6 +2,7 @@
  * Created by johnvangilder on 7/16/16.
  */
 
+//temp comment just so i can do a commit test
 
 import java.util.*;
 
@@ -135,7 +136,7 @@ public class main extends Application implements EventHandler<ActionEvent>{
         hbButtons2.setAlignment(Pos.CENTER);
 
         Scene scene = new Scene(layout, 300, 250);
-      //  primaryStage.setMaximized(true);
+        primaryStage.setMaximized(true);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
@@ -463,6 +464,6 @@ public class main extends Application implements EventHandler<ActionEvent>{
 
         return;
     }
-
+    //TODO: Implement sorting
 
 }
